@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RQ.Unpacker", "RQ.Unpacker\RQ.Unpacker.csproj", "{9BB3F0C7-306C-4B9E-9FD3-A5CE79F13418}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BB3F0C7-306C-4B9E-9FD3-A5CE79F13418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB3F0C7-306C-4B9E-9FD3-A5CE79F13418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BB3F0C7-306C-4B9E-9FD3-A5CE79F13418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BB3F0C7-306C-4B9E-9FD3-A5CE79F13418}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6166C419-2B1F-496F-8DED-2D3EC13C8E77}
+	EndGlobalSection
+EndGlobal
