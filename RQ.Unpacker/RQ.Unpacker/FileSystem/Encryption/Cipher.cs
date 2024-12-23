@@ -44,12 +44,14 @@ namespace RQ.Unpacker
                         lpBuffer[dwEndIndex + 2] = (Byte)(dwValueB >> 16);
                         lpBuffer[dwEndIndex + 3] = (Byte)(dwValueB >> 24);
                     }
+
+                    var lpResult = Zlib.iDecompress(lpBuffer, 14);
+
+                    return lpResult;
                 }
             }
 
-            var lpResult = Zlib.iDecompress(lpBuffer, 14);
-
-            return lpResult;
+            return lpBuffer;
         }
     }
 }
