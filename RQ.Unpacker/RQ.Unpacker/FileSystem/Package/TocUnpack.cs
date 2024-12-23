@@ -7,6 +7,9 @@ namespace RQ.Unpacker
 {
     class TocUnpack
     {
+        private static String m_StartupFile = "data/startup.af".Replace("/", @"\");
+        private static String m_PCacheFile = "data/pcache.af".Replace("/", @"\");
+
         private static List<TocDiskFileEntry> m_ArchiveTable = new List<TocDiskFileEntry>();
         private static List<TocDiskFileEntry> m_DiskTable = new List<TocDiskFileEntry>();
         private static List<TocEntry> m_EntryTable = new List<TocEntry>();
@@ -113,21 +116,33 @@ namespace RQ.Unpacker
                         m_Entry.wFileNameLength = TTocMemoryStream.ReadUInt16();
                         m_Entry.m_FileName = Encoding.ASCII.GetString(TTocMemoryStream.ReadBytes(m_Entry.wFileNameLength)).Replace("/", @"\");
 
+
                         if (m_Entry.wArchiveIndex > m_ArchiveTable.Count)
                         {
-                            Utils.iSetWarning("[INFO]: Entry " + m_Entry.m_FileName + " does not exist (removed)");
+                            switch(m_Entry.wArchiveIndex)
+                            {
+                                case 0xFFFE: m_Entry.m_ArchiveName = "data/startup.af".Replace("/", @"\"); break;
+                                case 0xFFFF: m_Entry.m_ArchiveName = "data/pcache.af".Replace("/", @"\"); break;
+                            }
                         }
                         else
                         {
                             m_Entry.m_ArchiveName = m_ArchiveTable[m_Entry.wArchiveIndex].m_FileName.Replace("/", @"\");
-                            m_EntryTable.Add(m_Entry);
                         }
+
+                        m_EntryTable.Add(m_Entry);
 
                         TTocMemoryStream.Seek(dwSavePos, SeekOrigin.Begin);
                     }
 
                     TTocMemoryStream.Dispose();
                 }
+
+                Utils.iSetInfo("[INFO]: Loading cache file -> " + m_StartupFile);
+                var TStartupStream = CacheFile.iLoadFile(Path.GetDirectoryName(m_TocFile) + @"\" + m_StartupFile);
+
+                Utils.iSetInfo("[INFO]: Loading cache file -> " + m_PCacheFile);
+                var TPCacheStream = CacheFile.iLoadFile(Path.GetDirectoryName(m_TocFile) + @"\" + m_PCacheFile);
 
                 foreach (var m_Entry in m_EntryTable)
                 {
@@ -136,26 +151,41 @@ namespace RQ.Unpacker
                     Utils.iSetInfo("[UNPACKING]: " + m_Entry.m_FileName);
                     Utils.iCreateDirectory(m_FullPath);
 
-                    using (FileStream TArchiveStream = File.OpenRead(Path.GetDirectoryName(m_TocFile) + @"\" + m_Entry.m_ArchiveName))
+                    if (m_Entry.wArchiveIndex > m_ArchiveTable.Count)
                     {
-                        TArchiveStream.Seek(m_Entry.dwOffset, SeekOrigin.Begin);
-
-                        if (m_Entry.dwCompressedSize != m_Entry.dwDecompressedSize)
+                        switch (m_Entry.wArchiveIndex)
                         {
-                            var lpSrcBuffer = TArchiveStream.ReadBytes((Int32)m_Entry.dwCompressedSize);
-                            var lpDstBuffer = Zlib.iDecompress(lpSrcBuffer);
-
-                            File.WriteAllBytes(m_FullPath, lpDstBuffer);
+                            case 0xFFFE: CacheFile.iReadData(TStartupStream, m_FullPath, m_Entry.dwOffset, m_Entry.dwCompressedSize, m_Entry.dwDecompressedSize); break;
+                            case 0xFFFF: CacheFile.iReadData(TPCacheStream, m_FullPath, m_Entry.dwOffset, m_Entry.dwCompressedSize, m_Entry.dwDecompressedSize); break;
+                            default: continue;
                         }
-                        else
+                    }
+                    else
+                    {
+                        using (FileStream TArchiveStream = File.OpenRead(Path.GetDirectoryName(m_TocFile) + @"\" + m_Entry.m_ArchiveName))
                         {
-                            var lpBuffer = TArchiveStream.ReadBytes((Int32)m_Entry.dwDecompressedSize);
-                            File.WriteAllBytes(m_FullPath, lpBuffer);
-                        }
+                            TArchiveStream.Seek(m_Entry.dwOffset, SeekOrigin.Begin);
 
-                        TArchiveStream.Dispose();
+                            if (m_Entry.dwCompressedSize != m_Entry.dwDecompressedSize)
+                            {
+                                var lpSrcBuffer = TArchiveStream.ReadBytes((Int32)m_Entry.dwCompressedSize);
+                                var lpDstBuffer = Zlib.iDecompress(lpSrcBuffer);
+
+                                File.WriteAllBytes(m_FullPath, lpDstBuffer);
+                            }
+                            else
+                            {
+                                var lpBuffer = TArchiveStream.ReadBytes((Int32)m_Entry.dwDecompressedSize);
+                                File.WriteAllBytes(m_FullPath, lpBuffer);
+                            }
+
+                            TArchiveStream.Dispose();
+                        }
                     }
                 }
+
+                TPCacheStream.Dispose();
+                TStartupStream.Dispose();
             }
         }
     }

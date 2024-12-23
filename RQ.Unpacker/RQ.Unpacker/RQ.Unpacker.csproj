@@ -46,6 +46,9 @@
     <Compile Include="FileSystem\Compression\Zlib.cs" />
     <Compile Include="FileSystem\Other\Helpers.cs" />
     <Compile Include="FileSystem\Other\Utils.cs" />
+    <Compile Include="FileSystem\Package\CacheEntry.cs" />
+    <Compile Include="FileSystem\Package\CacheFile.cs" />
+    <Compile Include="FileSystem\Package\CacheHeader.cs" />
     <Compile Include="FileSystem\Package\TocComprHeader.cs" />
     <Compile Include="FileSystem\Package\TocDiskFileEntry.cs" />
     <Compile Include="FileSystem\Package\TocEntry.cs" />
