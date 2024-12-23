@@ -23,6 +23,21 @@ namespace RQ.Unpacker
                 m_CacheHeader.dwCompressedSize = TCacheStream.ReadUInt32();
                 m_CacheHeader.dwDecompressedSize = TCacheStream.ReadUInt32();
 
+                if (m_CacheHeader.dwMagic != 0x46415152)
+                {
+                    throw new Exception("[ERROR]: Invalid magic of cache file!");
+                }
+
+                if (m_CacheHeader.dwFormatVersion != 0)
+                {
+                    throw new Exception("[ERROR]: Invalid version of cache file!");
+                }
+
+                if (m_CacheHeader.dwReserved != 0)
+                {
+                    throw new Exception("[ERROR]: Invalid cache file!");
+                }
+
                 var m_CacheEntry = new CacheEntry();
 
                 m_CacheEntry.lpMD5 = TCacheStream.ReadBytes(16);
@@ -50,6 +65,11 @@ namespace RQ.Unpacker
             if (dwCompressedSize == dwDecompressedSize)
             {
                 var lpBuffer = TStream.ReadBytes((Int32)dwDecompressedSize);
+
+                if (Path.GetFileName(m_FileName) == "logic.strg")
+                {
+                    lpBuffer = Cipher.iDecryptData(lpBuffer);
+                }
 
                 File.WriteAllBytes(m_FileName, lpBuffer);
             }

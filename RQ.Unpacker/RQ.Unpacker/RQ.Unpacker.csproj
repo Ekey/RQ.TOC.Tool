@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystem\Compression\Zlib.cs" />
+    <Compile Include="FileSystem\Encryption\Cipher.cs" />
     <Compile Include="FileSystem\Other\Helpers.cs" />
     <Compile Include="FileSystem\Other\Utils.cs" />
     <Compile Include="FileSystem\Package\CacheEntry.cs" />
