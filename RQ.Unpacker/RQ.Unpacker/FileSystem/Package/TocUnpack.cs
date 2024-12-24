@@ -116,13 +116,12 @@ namespace RQ.Unpacker
                         m_Entry.wFileNameLength = TTocMemoryStream.ReadUInt16();
                         m_Entry.m_FileName = Encoding.ASCII.GetString(TTocMemoryStream.ReadBytes(m_Entry.wFileNameLength)).Replace("/", @"\");
 
-
                         if (m_Entry.wArchiveIndex > m_ArchiveTable.Count)
                         {
                             switch(m_Entry.wArchiveIndex)
                             {
-                                case 0xFFFE: m_Entry.m_ArchiveName = "data/startup.af".Replace("/", @"\"); break;
-                                case 0xFFFF: m_Entry.m_ArchiveName = "data/pcache.af".Replace("/", @"\"); break;
+                                case 0xFFFE: m_Entry.m_ArchiveName = m_StartupFile; break;
+                                case 0xFFFF: m_Entry.m_ArchiveName = m_PCacheFile; break;
                             }
                         }
                         else
