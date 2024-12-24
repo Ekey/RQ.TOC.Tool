@@ -25,13 +25,12 @@ namespace RQ.Unpacker
                 {
                     for (Int32 i = 0; i < dwBlocks; i++, dwStartIndex += 4, dwEndIndex -= 4)
                     {
-                        UInt32 dwValueA = 0;
-                        UInt32 dwValueB = 0;
+                        UInt32 dwValueA = BitConverter.ToUInt32(lpBuffer, dwEndIndex);
+                        UInt32 dwValueB = BitConverter.ToUInt32(lpBuffer, dwStartIndex);
                         
-                        dwValueB = BitConverter.ToUInt32(lpBuffer, dwStartIndex);
                         dwSeed = 0x19660D * dwSeed + 0x3C6EF35F;
 
-                        dwValueA = (dwSeed ^ BitConverter.ToUInt32(lpBuffer, dwEndIndex)) - dwSeed;
+                        dwValueA = (dwSeed ^ dwValueA) - dwSeed;
                         dwValueB = (dwSeed ^ dwValueB) - dwSeed;
 
                         lpBuffer[dwStartIndex + 0] = (Byte)dwValueA;
