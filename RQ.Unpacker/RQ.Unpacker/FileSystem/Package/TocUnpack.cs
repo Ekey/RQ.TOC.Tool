@@ -67,7 +67,7 @@ namespace RQ.Unpacker
                     m_CommonHeader.dwReserved2[2] = TTocMemoryStream.ReadUInt32();
                     m_CommonHeader.dwReserved2[3] = TTocMemoryStream.ReadUInt32();
 
-                    m_DiskTable.Clear();
+                    m_ArchiveTable.Clear();
                     for (Int32 i = 0; i < m_CommonHeader.dwNumOfArchives + 2; i++)
                     {
                         var m_DiskFileEntry = new TocDiskFileEntry();

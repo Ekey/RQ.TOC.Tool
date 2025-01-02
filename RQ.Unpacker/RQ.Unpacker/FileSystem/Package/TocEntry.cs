@@ -13,5 +13,5 @@ namespace RQ.Unpacker
         public UInt16 wFileNameLength { get; set; }
         public String m_FileName { get; set; }
         public String m_ArchiveName { get; set; }
-}
+    }
 }
